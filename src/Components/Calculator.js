@@ -1,120 +1,348 @@
-import React, { useState } from 'react'
-import './Calculator.css'
+import React, { useState } from "react";
+import "./Calculator.css";
+import { IoIosMenu } from "react-icons/io";
+import { RxCross1, RxBox } from "react-icons/rx";
+import { BsBackspace } from "react-icons/bs";
+import { PiDivideLight } from "react-icons/pi";
+import { GoDash, GoPlus } from "react-icons/go";
+import { TbSquareRoot2 } from "react-icons/tb";
 
 function Calculator() {
-    const [input, setInput] = useState('');
-    const [operator, setOperator] = useState('');
-    const [result, setResult] = useState('');
+  const [current, setCurrent] = useState("");
+  const [prevoius, setPrevoius] = useState("");
+  const [operations, setOperations] = useState("");
 
-
-
-    const handleClick = (value) => {
-        if (value === '+' || value === '-' || value === '*' || value === '/') {
-            setOperator(input + value);
-            setInput((prevInput) => prevInput + value);
-            console.log(operator);
-        } else {
-
-            setInput((prevInput) => prevInput + value);
-            console.log(input);
-        }
-       
-
-    }
-    const calculateResult = () => {
-        try {
-            const result = eval(input)
-            setInput(result)
-            setResult(result)
-        } catch (err) {
-            setInput('')
-            setResult('')
-        }
-    }
-
-    const calculateSquareRoot = () => {
-        const sqrt = Math.sqrt(parseFloat(input));
-        setResult(isNaN(sqrt) ? "Invalid input" : `${sqrt}`);
-    };
-    const calculateSquare = () => {
-        const sq = Math.pow(input, 2);
-        setResult(isNaN(sq) ? "Invalid input" : `${sq}`);
+    const deleteHandler = (value) => {
+      if(value==='dl'){
+        setCurrent(String(current).slice(0, -1));
+      }
     };
 
-    const oneByx = () => {
-        const onebyx = (1 / input)
-        setResult(isNaN(onebyx) ? "Invalid input" : `${onebyx}`);
+  const allclearHandler = (value) => {
+    if (value === "CE") {
+      setCurrent("");
+      setOperations("");
+      setPrevoius("");
     }
+  };
 
-    const percentage = () => {
-        const per = (input / 100)
-        setResult(isNaN(per) ? "Invalid input" : `${per}`);
+  const clearCurrent = (value) => {
+    if (value === "C") {
+      setCurrent("");
     }
+  };
 
-    const backspace = () => {
-        try {
-            const res = input ? input.slice(0, -1) : result.slice(0, -1)
-            setInput(res)
-            setResult(res)
-        } catch (err) {
-            setInput('')
-            setResult('')
-        }
+  const calculateRoot = () => {
+    try {
+      setPrevoius(current)
+      let prv = current ? prevoius : current;
+      const result = Math.sqrt(parseFloat(current));
+      setCurrent(result);
+      setPrevoius("root(" + prv + ")");
+    } catch (error) {
+      setCurrent("Invalid Input");
     }
+  };
 
-    return (
-        <div className="calculator">
-            <div className="calc">
-                <div className="display">
-                    <div className='name'>Calculator</div>
-                    <div className='mode'>Standerd</div>
-                    <div className="operation">{input}</div>
-                    <div className="result">{result ? result : input}</div>
-                </div>
-                <div className="buttons">
-                    <div className="row">
-                        <div className="col symbol" onClick={percentage}>%</div>
-                        <div className="col symbol" onClick={() => {  setInput(''); setOperator(); setResult(); }}>CE</div>
-                        <div className="col symbol" onClick={() => {  setInput(''); setOperator(); setResult(); }}>C</div>
-                        <div className="col symbol" onClick={backspace}><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-backspace" viewBox="0 0 16 16">
-                            <path d="M5.83 5.146a.5.5 0 0 0 0 .708L7.975 8l-2.147 2.146a.5.5 0 0 0 .707.708l2.147-2.147 2.146 2.147a.5.5 0 0 0 .707-.708L9.39 8l2.146-2.146a.5.5 0 0 0-.707-.708L8.683 7.293 6.536 5.146a.5.5 0 0 0-.707 0z" />
-                            <path d="M13.683 1a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-7.08a2 2 0 0 1-1.519-.698L.241 8.65a1 1 0 0 1 0-1.302L5.084 1.7A2 2 0 0 1 6.603 1h7.08zm-7.08 1a1 1 0 0 0-.76.35L1 8l4.844 5.65a1 1 0 0 0 .759.35h7.08a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1h-7.08z" />
-                        </svg></div>
-                    </div>
-                    <div className="row">
-                        <div className="col symbol" onClick={oneByx}><sup>1</sup>&frasl;<sub>x</sub></div>
-                        <div className="col symbol" onClick={calculateSquare}>x<sup>2</sup></div>
-                        <div className="col symbol" onClick={calculateSquareRoot}><sup>2</sup>&#8730;<sub>x</sub></div>
-                        <div className="col symbol" onClick={() => handleClick('/')}>&divide;</div>
-                    </div>
-                    <div className="row">
-                        <div className="col" onClick={() => handleClick('8')}>8</div>
-                        <div className="col" onClick={() => handleClick('7')}>7</div>
-                        <div className="col" onClick={() => handleClick('9')}>9</div>
-                        <div className="col symbol" onClick={() => handleClick('*')}>&#215;</div>
-                    </div>
-                    <div className="row">
-                        <div className="col" onClick={() => handleClick('4')}>4</div>
-                        <div className="col" onClick={() => handleClick('5')}>5</div>
-                        <div className="col" onClick={() => handleClick('6')}>6</div>
-                        <div className="col symbol" onClick={() => handleClick('-')}>-</div>
-                    </div>
-                    <div className="row">
-                        <div className="col" onClick={() => handleClick('1')}>1</div>
-                        <div className="col" onClick={() => handleClick('2')}>2</div>
-                        <div className="col" onClick={() => handleClick('3')}>3</div>
-                        <div className="col symbol" onClick={() => handleClick('+')}>+</div>
-                    </div>
-                    <div className="row">
-                        <div className="col"><sup>+</sup>/<sub>-</sub></div>
-                        <div className="col" onClick={() => handleClick('0')}>0</div>
-                        <div className="col" onClick={() => handleClick('.')}>.</div>
-                        <div className="col equal" onClick={calculateResult}>=</div>
-                    </div>
-                </div>
-            </div>
+  const calculatePercentage = () => {
+    try {
+      const result = (parseFloat(current) / 100).toString();
+      setCurrent(result);
+    } catch (error) {
+      setCurrent("ERROR");
+    }
+  };
+
+  const calculateReciprocal = () => {
+    try {
+      setPrevoius(current)
+      let val = current ? prevoius : current;
+      const result = (1 / parseFloat(current)).toString();
+      setCurrent(result);
+      setPrevoius("1/(" + val + ")");
+    } catch (error) {
+      setCurrent("ERROR");
+    }
+  };
+
+  const calculateSquare = () => {
+    try {
+      setPrevoius(current)
+      let sqr = current ? prevoius : current;
+      const result = (parseFloat(current) * parseFloat(current))
+      setCurrent(result);
+      setPrevoius("sqr(" + sqr + ")");
+    } catch (error) {
+      setCurrent("ERROR");
+    }
+  };
+
+  const compute = () => {
+    let result;
+    let previousNumber = parseFloat(prevoius);
+    let currentNumber = parseFloat(current);
+    if (isNaN(previousNumber) || isNaN(currentNumber)) return;
+    switch (operations) {
+      case "/":
+        result =
+          currentNumber === 0
+            ? "Cannot divide by zero"
+            : previousNumber / currentNumber;
+        break;
+      case "*":
+        result = previousNumber * currentNumber;
+        break;
+      case "+":
+        result = previousNumber + currentNumber;
+        break;
+      case "-":
+        result = previousNumber - currentNumber;
+        break;
+      default:
+        return;
+    }
+    return result;
+  };
+
+
+
+  const appendValueHandler = (el) => {
+    const value = el;
+    console.log("here is the value", value);
+    if (value === "." && current.includes(".")) return;
+    if (current.length < 12) setCurrent(current + value);
+  };
+
+  const chooseOperationHandler = (el) => {
+    if (current === "") {
+      return;
+    }
+    if (current === ".") {
+      return;
+    }
+    if (prevoius !== "") {
+      setPrevoius(current);
+      setOperations(el);
+      let value = compute();
+      setPrevoius(value);
+    } else {
+    setPrevoius(current);
+    setOperations(el);
+  }
+    setCurrent("");
+  };
+
+  const equalHandler = (value) => {
+    if (value === undefined || current === null || value == null) return;
+    if (value === "=") {
+      if(current==='') return;
+      let ans = compute();
+      setOperations(operations + current + value);
+      setCurrent(ans);
+    }
+  };
+
+
+
+  let buttons = [
+    {
+      value: "%",
+      opr: true,
+      onclick: () => calculatePercentage()
+    },
+    {
+      value: "CE",
+      opr: true,
+      onclick: () => clearCurrent("C")
+    },
+    {
+      value: "C",
+      opr: true,
+      onclick: () => allclearHandler("CE")
+    },
+    {
+      value: <BsBackspace />,
+      opr: true,
+      onclick: () => deleteHandler("dl")
+    },
+    {
+      value: (
+        <div>
+          <sup>1</sup>/<sub>x</sub>
         </div>
-    )
-}
-export default Calculator
+      ),
+      opr: true,
+      onclick: () => calculateReciprocal()
+    },
+    {
+      value: (
+        <div>
+          x<sup>2</sup>
+        </div>
+      ),
+      opr: true,
+      onclick: () => calculateSquare()
+    },
+    {
+      value: (
+        <div>
+          <sup>2</sup>
+          <TbSquareRoot2 />
+        </div>
+      ),
+      opr: true,
+      onclick: () => calculateRoot()
+    },
+    {
+      value: <PiDivideLight />,
+      opr: true,
+      onclick: () => chooseOperationHandler("/")
+    },
+    {
+      value: "7",
+      onclick: () => appendValueHandler("8")
+    },
+    {
+      value: "8",
+      onclick: () => appendValueHandler("7")
+    },
+    {
+      value: "9",
+      onclick: () => appendValueHandler("9")
+    },
+    {
+      value: <RxCross1 />,
+      opr: true,
+      onclick: () => chooseOperationHandler("*")
+    },
+    {
+      value: "4",
+      onclick: () => appendValueHandler("4")
+    },
+    {
+      value: "5",
+      onclick: () => appendValueHandler("5")
+    },
+    {
+      value: "6",
+      onclick: () => appendValueHandler("6")
+    },
+    {
+      value: <GoDash />,
+      opr: true,
+      onclick: () => chooseOperationHandler("-")
+    },
+    {
+      value: "1",
+      onclick: () => appendValueHandler("1")
+    },
+    {
+      value: "2",
+      onclick: () => appendValueHandler("2")
+    },
+    {
+      value: "3",
+      onclick: () => appendValueHandler("3")
+    },
+    {
+      value: <GoPlus />,
+      opr: true,
+      onclick: () => chooseOperationHandler("+")
+    },
+    {
+      value: (
+        <div>
+          <sup>+</sup>/<sub>-</sub>
+        </div>
+      ),
+    },
+    {
+      value: "0",
+      onclick: () => appendValueHandler("0")
+    },
+    {
+      value: ".",
+      onclick: () => appendValueHandler(".")
+    },
+    {
+      value: "=",
+      opr: true,
+      eq: true,
+      onclick: () => equalHandler("=")
+    },
+  ];
 
+  return (
+    <div className="main">
+      <div className="calculator">
+        <div className="display">
+          <div
+            style={{
+              display: "flex",
+              opacity: "70%",
+              height: "40px",
+              alignItems: "center",
+            }}
+          >
+            <h6>Calculator</h6>
+            <div
+              style={{
+                gap: "30px",
+                display: "flex",
+                justifyContent: "end",
+                alignItems: "center",
+                width: "100%",
+                borderRadius: "5px",
+                marginRight: "10px",
+              }}
+            >
+              <GoDash />
+              <RxBox />
+              <RxCross1 />
+            </div>
+          </div>
+          <div style={{ display: "flex", alignItems: "center" }}>
+            <IoIosMenu
+              style={{
+                marginLeft: "5px",
+                width: "25px",
+                height: "20px",
+              }}
+            />
+            <h5>Standerd</h5>
+          </div>
+          <div style={{ maxWidth: "330px" }}>
+            <div className="h4" style={{ height: "30px" }}>
+              {prevoius}
+              {operations}
+            </div>
+            <p className="h1">{current ? current : "0"}</p>
+          </div>
+        </div>
+        <div className="numberpad">
+          {buttons.map((btn) => {
+            if (btn.eq) {
+              return (
+                <button className="sum" onClick={btn.onclick}>
+                  {btn.value}
+                </button>
+              );
+            } else {
+              return btn.opr ? (
+                <button className="operant" onClick={btn.onclick}>
+                  {btn.value}
+                </button>
+              ) : (
+                <button className="number" onClick={btn.onclick}>
+                  {btn.value}
+                </button>
+              );
+            }
+          })}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default Calculator;
